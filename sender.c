@@ -43,15 +43,15 @@ extern int errno;
 int send_udp(char * host, int port, testcase_t * testcase){
     int sock = 0;
     ssize_t r;
-    struct sockaddr_in serv_addr;
+    struct sockaddr_in6 serv_addr;  // Changed to IPv6 address struct
 
-    if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0){
+    if((sock = socket(AF_INET6, SOCK_DGRAM, 0)) < 0){  // Changed to AF_INET6
         fatal("[!] Error: Could not create socket: %s\n", strerror(errno));
     }
 
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(port);
-    inet_pton(AF_INET, host, &serv_addr.sin_addr);
+    serv_addr.sin6_family = AF_INET6;  // Changed to AF_INET6
+    serv_addr.sin6_port = htons(port);
+    inet_pton(AF_INET6, host, &serv_addr.sin6_addr);  // Changed to support IPv6
 
     if(fuzz.is_tls){ // DTLS
         SSL_CTX * ctx;
@@ -151,15 +151,15 @@ int send_udp(char * host, int port, testcase_t * testcase){
 */
 int send_tcp(char * host, int port, testcase_t * testcase){
     int sock = 0;
-    struct sockaddr_in serv_addr;
+    struct sockaddr_in6 serv_addr;  // Changed to IPv6 address struct
 
-    if((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+    if((sock = socket(AF_INET6, SOCK_STREAM, 0)) < 0){  // Changed to AF_INET6
         fatal("[!] Error: Could not create socket: %s\n", strerror(errno));
     }
 
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(port);
-    inet_pton(AF_INET, host, &serv_addr.sin_addr);
+    serv_addr.sin6_family = AF_INET6;  // Changed to AF_INET6
+    serv_addr.sin6_port = htons(port);
+    inet_pton(AF_INET6, host, &serv_addr.sin6_addr);  // Changed to support IPv6
 
     int c = connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
     if(c < 0){
